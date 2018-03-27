@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+	<head>
+		<meta charset="utf-8">
+		<link href="{% static 'news/style.css' %}" rel="stylesheet">
+		<title>News</title>
+        <script src="http://code.jquery.com/jquery-2.0.2.min.js"></script>
+        <script>
+
+                $(document).ready(function(){
+                    //Скрыть PopUp при загрузке страницы    
+                    PopUpHide();
+                    PopUpHide2();
+                });
+                //Функция отображения PopUp
+                function PopUpShow(id_){
+                    $("#popup1").show();
+                }
+                //Функция скрытия PopUp
+                function PopUpHide(){
+                    $("#popup1").hide();
+                }
+                function PopUpShow2(){
+                    $("#popup2").show();
+                }
+                //Функция скрытия PopUp
+                function PopUpHide2(){
+                    $("#popup2").hide();
+                }
+               function PopUpShow3(){
+                    $("#new_challenge").css({display:'block'});
+                }
+                //Функция скрытия PopUp
+                function PopUpHide3(){
+                    $("#new_challenge").hide();
+                }
+                function showprofile(id_){
+                    $("#" + id_).css({"display":"none"})
+                    $("#" + id_ +"_profile").css({"display":"block"})
+                }
+                function hideprofile(id_){
+                    $("#" + id_ +"_profile").css({"display":"none"})
+                    $("#" + id_).css({"display":"block"})
+                }
+        </script>
+	</head>
+	<body>
+		<div id="container">
+			<div id = "head">
+				<div class="btn"><p class="pb">Новости</p></div>
+				<div class="btn"><p	class="pb">Сообщения</p></div>
+				<div class="btn"><p	class="pb">Подписчики</p></div>
+				<div class="btn"><p	class="pb">Настройки</p></div>
+				<p id="plus" class="head_signs"><a href="javascript:PopUpShow3()" style="	text-decoration: none; color:black;">+</a></p>
+				<img src="ManSign.png" id ="ManSign" class="head_signs"/>
+				
+			</div>
+			
+			<div id = "main">
+                
+                <div class="content" id="new_challenge">
+                    <div class="add_photo_block"><p class="add_photo">+</p></div>
+					<input class = "new_title"/>
+					<textarea class="new_text"></textarea> 
+				</div>
+                    <div class="content" id="12345"> <!-- Блок новостей --> 
+                        <img class="content_img" src="https://pp.userapi.com/c834304/v834304015/5020a/nl3OqGOFiOc.jpg" />
+                        <h1 class="content_h1">Bla bla bla</h1 class="content_h1">
+                        <p class="content_text">бляб ля лаявл аява выфа фыафывапфы ипдрывфарифдр</p>
+
+                        <div class="owner_of_news">
+                        <a class="show_profile" href="javascript:showprofile('12345')">
+                            <img class="owner_of_news_img" src="https://pp.userapi.com/c834302/v834302361/1c126/tFHca4moQzE.jpg"/>
+                            <p class="owner_of_news_p">Артём Тарасов</p>
+                        </a>
+                        </div>
+                        <div class="time_left">30 days left</div>
+                    </div> <!-- Блок новостей -->
+                
+                    <div class="content profile_block" id="12345_profile"> <!-- Блок профиля в разделе новости --> 
+                        <a class="exit_symbol" href="javascript:hideprofile('12345')">X</a> <!-- Блок профиля в разделе новости --> 
+                        <img class="profile_img" src="https://pp.userapi.com/c834302/v834302361/1c126/tFHca4moQzE.jpg" />
+                        <h1 class="profile_h1">Владислав Инютин</h1 class="content_h1">
+                        <div id="profile_block_statistic">
+                            <div class="flex_row">
+                                <img src="https://image.freepik.com/free-icon/no-translate-detected_318-37158.jpg"/>
+                                <img src="https://image.freepik.com/free-icon/no-translate-detected_318-52486.jpg"/>
+                                <img src="https://image.freepik.com/free-icon/no-translate-detected_318-33583.jpg"/>
+                            </div>
+                            <div class="flex_row">
+                                <div>5000000</div>
+                                <div>10000</div>
+                                <div>324</div>
+                            </div>
+                        </div>
+                        <div class="news_profile_buttons">
+                            Написать сообщение
+                        </div>
+                        <div class="news_profile_buttons">
+                            Показать задачи 
+                        </div>
+
+                        <div class="news_profile_buttons">
+                            Подписаться 
+                        </div>
+                    </div> <!-- Блок профиля в разделе новости --> 
+                
+                <div class="content">
+					<img class="content_img" src="https://pp.userapi.com/c834304/v834304015/5020a/nl3OqGOFiOc.jpg" />
+					<h1 class="content_h1">Bla bla bla</h1 class="content_h1">
+					<p class="content_text">бляб ля лаявл аява выфа фыафывапфы ипдрывфарифдр</p>
+                    
+                    <div class="owner_of_news">
+                    <img class="owner_of_news_img" src="https://pp.userapi.com/c834302/v834302361/1c126/tFHca4moQzE.jpg"/>
+                    <p class="owner_of_news_p">Артём Тарасов</p>
+                    </div>
+                    <div class="time_left">30 days left</div>
+				</div>
+                
+                <div class="content">
+					<img class="content_img" src="https://pp.userapi.com/c834304/v834304015/5020a/nl3OqGOFiOc.jpg" />
+					<h1 class="content_h1">Bla bla bla</h1 class="content_h1">
+					<p class="content_text">бляб ля лаявл аява выфа фыафывапфы ипдрывфарифдр</p>
+                    
+                    <div class="owner_of_news">
+                    <img class="owner_of_news_img" src="https://pp.userapi.com/c834302/v834302361/1c126/tFHca4moQzE.jpg"/>
+                    <p class="owner_of_news_p">Артём Тарасов</p>
+                    </div>
+                    <div class="time_left">30 days left</div>
+				</div>
+                
+                <div class="content">
+					<img class="content_img" src="https://pp.userapi.com/c834304/v834304015/5020a/nl3OqGOFiOc.jpg" />
+					<h1 class="content_h1">Bla bla bla</h1 class="content_h1">
+					<p class="content_text">бляб ля лаявл аява выфа фыафывапфы ипдрывфарифдр</p>
+                    
+                    <div class="owner_of_news">
+                    <img class="owner_of_news_img" src="https://pp.userapi.com/c834302/v834302361/1c126/tFHca4moQzE.jpg"/>
+                    <p class="owner_of_news_p">Артём Тарасов</p>
+                    </div>
+                    <div class="time_left">30 days left</div>
+				</div>
+                
+                <div class="content">
+					<img class="content_img" src="https://pp.userapi.com/c834304/v834304015/5020a/nl3OqGOFiOc.jpg" />
+					<h1 class="content_h1">Bla bla bla</h1 class="content_h1">
+					<p class="content_text">бляб ля лаявл аява выфа фыафывапфы ипдрывфарифдр</p>
+                    
+                    <div class="owner_of_news">
+                    <img class="owner_of_news_img" src="https://pp.userapi.com/c834302/v834302361/1c126/tFHca4moQzE.jpg"/>
+                    <p class="owner_of_news_p">Артём Тарасов</p>
+                    </div>
+                    <div class="time_left">30 days left</div>
+				</div>
+                
+                <div class="content">
+					<img class="content_img" src="https://pp.userapi.com/c834304/v834304015/5020a/nl3OqGOFiOc.jpg" />
+					<h1 class="content_h1">Bla bla bla</h1 class="content_h1">
+					<p class="content_text">бляб ля лаявл аява выфа фыафывапфы ипдрывфарифдр</p>
+                    
+                    <div class="owner_of_news">
+                    <img class="owner_of_news_img" src="https://pp.userapi.com/c834302/v834302361/1c126/tFHca4moQzE.jpg"/>
+                    <p class="owner_of_news_p">Артём Тарасов</p>
+                    </div>
+                    <div class="time_left">30 days left</div>
+				</div>
+                
+                <div class="content">
+					<img class="content_img" src="https://pp.userapi.com/c834304/v834304015/5020a/nl3OqGOFiOc.jpg" />
+					<h1 class="content_h1">Bla bla bla</h1 class="content_h1">
+					<p class="content_text">бляб ля лаявл аява выфа фыафывапфы ипдрывфарифдр</p>
+                    
+                    <div class="owner_of_news">
+                    <img class="owner_of_news_img" src="https://pp.userapi.com/c834302/v834302361/1c126/tFHca4moQzE.jpg"/>
+                    <p class="owner_of_news_p">Артём Тарасов</p>
+                    </div>
+                    <div class="time_left">30 days left</div>
+				</div>
+                
+                <div class="content">
+					<img class="content_img" src="https://pp.userapi.com/c834304/v834304015/5020a/nl3OqGOFiOc.jpg" />
+					<h1 class="content_h1">Bla bla bla</h1 class="content_h1">
+					<p class="content_text">бляб ля лаявл аява выфа фыафывапфы ипдрывфарифдр</p>
+                    
+                    <div class="owner_of_news">
+                    <img class="owner_of_news_img" src="https://pp.userapi.com/c834302/v834302361/1c126/tFHca4moQzE.jpg"/>
+                    <p class="owner_of_news_p">Артём Тарасов</p>
+                    </div>
+                    <div class="time_left">30 days left</div>
+				</div>
+                
+                <div class="content">
+					<img class="content_img" src="https://pp.userapi.com/c834304/v834304015/5020a/nl3OqGOFiOc.jpg" />
+					<h1 class="content_h1">Bla bla bla</h1 class="content_h1">
+					<p class="content_text">бляб ля лаявл аява выфа фыафывапфы ипдрывфарифдр</p>
+                    
+                    <div class="owner_of_news">
+                    <img class="owner_of_news_img" src="https://pp.userapi.com/c834302/v834302361/1c126/tFHca4moQzE.jpg"/>
+                    <p class="owner_of_news_p">Артём Тарасов</p>
+                    </div>
+                    <div class="time_left">30 days left</div>
+				</div>
+				
+
+			</div>
+			<div id = "navigation">
+				<div class="sections"><p>Мои подписки</p></div>
+				<div class="sections"><p>Популярное</p></div>
+				<div class="sections"><p>Новое</p></div>
+				
+			</div>
+		</div>
+	</body>
+</html>
