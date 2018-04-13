@@ -60,51 +60,61 @@
 			<div id = "main">
                 
                 <div class="content" id="new_challenge">
-                    <div class="add_photo_block"><p class="add_photo">+</p></div>
-					<input class = "new_title"/>
-					<textarea class="new_text"></textarea> 
+                    <form action="{% url 'new_post'%}" method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div id="add_photo_block">{{form.image}}</div>
+                        <div id="new_title">{{form.title}}</div>
+                        <div id="new_text">{{form.text}}</div>
+                        <div id="time">{{form.time}}</div>
+
+                        <input type="submit" value="Submit"/>
+                    </form>
 				</div>
-                    <div class="content" id="12345"> <!-- Блок новостей --> 
-                        <img class="content_img" src="https://pp.userapi.com/c834304/v834304015/5020a/nl3OqGOFiOc.jpg" />
-                        <h1 class="content_h1">Bla bla bla</h1 class="content_h1">
-                        <p class="content_text">бляб ля лаявл аява выфа фыафывапфы ипдрывфарифдр</p>
+                    {%for post in posts%}
+                        <div class="content" id="{{post.id}}"> <!-- Блок новостей -->
+                            <img class="content_img" src="{{post.image.url}}" />
+                            <h1 class="content_h1">{{post.title}}</h1>
+                            <p class="content_text">{{post.text}}</p>
 
-                        <div class="owner_of_news">
-                        <a class="show_profile" href="javascript:showprofile('12345')">
-                            <img class="owner_of_news_img" src="https://pp.userapi.com/c834302/v834302361/1c126/tFHca4moQzE.jpg"/>
-                            <p class="owner_of_news_p">Артём Тарасов</p>
-                        </a>
-                        </div>
-                        <div class="time_left">30 days left</div>
-                    </div> <!-- Блок новостей -->
-                
-                    <div class="content profile_block" id="12345_profile"> <!-- Блок профиля в разделе новости --> 
-                        <a class="exit_symbol" href="javascript:hideprofile('12345')">X</a> <!-- Блок профиля в разделе новости --> 
-                        <img class="profile_img" src="https://pp.userapi.com/c834302/v834302361/1c126/tFHca4moQzE.jpg" />
-                        <h1 class="profile_h1">Владислав Инютин</h1 class="content_h1">
-                        <div id="profile_block_statistic">
-                            <div class="flex_row">
-                                <img src="https://image.freepik.com/free-icon/no-translate-detected_318-37158.jpg"/>
-                                <img src="https://image.freepik.com/free-icon/no-translate-detected_318-52486.jpg"/>
-                                <img src="https://image.freepik.com/free-icon/no-translate-detected_318-33583.jpg"/>
+                            <div class="owner_of_news">
+                            <a class="show_profile" href="javascript:showprofile('post.id')">
+                                <img class="owner_of_news_img" src="https://pp.userapi.com/c834302/v834302361/1c126/tFHca4moQzE.jpg"/>
+                                <p class="owner_of_news_p">{{post.author.name}} {{post.author.surname}}</p>
+                            </a>
                             </div>
-                            <div class="flex_row">
-                                <div>5000000</div>
-                                <div>10000</div>
-                                <div>324</div>
-                            </div>
-                        </div>
-                        <div class="news_profile_buttons">
-                            Написать сообщение
-                        </div>
-                        <div class="news_profile_buttons">
-                            Показать задачи 
-                        </div>
+                            <div class="time_left">{{post.time}} days left</div>
+                        </div> <!-- Блок новостей -->
 
-                        <div class="news_profile_buttons">
-                            Подписаться 
+                        <div class="content profile_block" id="12345_profile"> <!-- Блок профиля в разделе новости -->
+                            <a class="exit_symbol" href="javascript:hideprofile('12345')">X</a> <!-- Блок профиля в разделе новости -->
+                            <img class="profile_img" src="https://pp.userapi.com/c834302/v834302361/1c126/tFHca4moQzE.jpg" />
+                            <h1 class="profile_h1">Владислав Инютин</h1 class="content_h1">
+                            <div id="profile_block_statistic">
+                                <div class="flex_row">
+                                    <img src="https://image.freepik.com/free-icon/no-translate-detected_318-37158.jpg"/>
+                                    <img src="https://image.freepik.com/free-icon/no-translate-detected_318-52486.jpg"/>
+                                    <img src="https://image.freepik.com/free-icon/no-translate-detected_318-33583.jpg"/>
+                                </div>
+                                <div class="flex_row">
+                                    <div>5000000</div>
+                                    <div>10000</div>
+                                    <div>324</div>
+                                </div>
+                            </div>
+
+                            <div class="news_profile_buttons">
+                                Написать сообщение
+                            </div>
+                            <div class="news_profile_buttons">
+                                Показать задачи
+                            </div>
+
+                            <div class="news_profile_buttons">
+                                Подписаться
+                            </div>
                         </div>
-                    </div> <!-- Блок профиля в разделе новости --> 
+                    {% endfor %}
+                <!-- Блок профиля в разделе новости -->
                 
                 <div class="content">
 					<img class="content_img" src="https://pp.userapi.com/c834304/v834304015/5020a/nl3OqGOFiOc.jpg" />
@@ -120,7 +130,7 @@
                 
                 <div class="content">
 					<img class="content_img" src="https://pp.userapi.com/c834304/v834304015/5020a/nl3OqGOFiOc.jpg" />
-					<h1 class="content_h1">Bla bla bla</h1 class="content_h1">
+					<h1 class="content_h1">Bla bla bla</h1>
 					<p class="content_text">бляб ля лаявл аява выфа фыафывапфы ипдрывфарифдр</p>
                     
                     <div class="owner_of_news">

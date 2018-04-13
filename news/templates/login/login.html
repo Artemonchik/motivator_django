@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+{%load static%}
+<html>
+	<head>
+		<title>Login</title>
+        <link href="{% static 'style.css' %}" rel="stylesheet">
+	</head>
+	<body>
+		<div id="login_block_log">
+            <p id="login_p">Мотиватор</p>
+            <form action="{% url 'login'%}" method="POST">
+                {% csrf_token %}
+                {% for field in form %}
+                    <div class="form_fields_div_log">
+                        {{ field.errors }}
+                        {{ field }}
+                    </div>
+                {% endfor %}
+            <input type="submit" value="Submit" id="registration_button" />
+            </form>
+        </div>
+	</body>
+</html>

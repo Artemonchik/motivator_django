@@ -120,6 +120,10 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static') #Это должен быть каталог, куда будут скопированы все статические файлы для более простой настройки сервера;
+
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, "static_files"),
 )
+
+MEDIA_ROOT  = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
