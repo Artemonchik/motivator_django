@@ -2,20 +2,23 @@ from django.shortcuts import render, redirect
 from . import forms
 from .models import *
 from django.http import HttpResponse
-from django.contrib.auth import login, authenticate
+from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.models import User
+from django.views.decorators.http import require_POST
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 def sign_up(request):
     if request.method == 'POST':
-        form = forms.Registration(request.POST)
+        form = forms.Registration(request.POST, request.FILES)
         if form.is_valid():
             user = form.save()
             user.refresh_from_db()
-            profile=Profile.objects.create(user=user)# load the profile instance created by the signal
+            profile = Profile.objects.create(user=user)  # load the profile instance created by the signal
             user.profile.name = form.cleaned_data.get('name')
             user.profile.surname = form.cleaned_data.get('surname')
             user.email = form.cleaned_data.get('email')
+            profile.profile_img = form.cleaned_data.get('image')
             user.save()
             profile.save()
             raw_password = form.cleaned_data.get('password1')
@@ -27,9 +30,9 @@ def sign_up(request):
                 return HttpResponse('Something wrong')
     else:
         form = forms.Registration()
-    return render(request, 'login/reg.html', {'form' : form})
+    return render(request, 'login/reg.html', {'form': form})
 
-
+@login_required()
 def all_news(request):
     if request.method == 'POST':
         a = Post(author=request.user.profile)
@@ -41,9 +44,13 @@ def all_news(request):
             return HttpResponse('Спасибо большоооое')
     else:
         form = forms.NewPost()
+        count = Post.objects.count()
         posts = Post.objects.all()[::-1]
     return render(request, 'news/news.html', {'form': form,
-                                              'posts': posts})
+                                              'posts': posts,
+                                              'count': count,
+                                              'profile':request.user.profile,
+                                              })
 
 
 def sign_in(request):
@@ -80,3 +87,57 @@ def new_post(request):
         return render(request, 'news/newpost.html', {'form': form})
     else:
         return HttpResponse('BAD')
+
+
+def follow_me(request):
+    if request.user.is_authenticated:
+        profile = request.user.profile
+        follow_left = request.user.profile.follow_him.all()[0::2]
+        follow_right = request.user.profile.follow_him.all()[1::2]
+        return render(request, 'follows/subscriptions.html', {'profile': profile,
+                                                              'follow_left':follow_left,
+                                                              'follow_right':follow_right})
+    else:
+        return redirect('login')
+
+def new_follow(request, id):
+    if request.user.is_authenticated:
+        profile = Profile.objects.get(id=id)
+        request.user.profile.follow_he.add(profile)
+        return HttpResponse('Всё отлично')
+    else:
+        redirect('login')
+
+@login_required()
+def myfollows(request):
+    if request.method == 'POST':
+        form = forms.NewPost(request.POST, request.FILES)
+        if form.is_valid():
+            post = form.save(commit=False)
+            post.author = request.user.profile
+            post.save()
+            return redirect('all_news')
+    else:
+        form = forms.NewPost()
+        count = Post.objects.count()
+        posts = Post.objects.filter(author__in=request.user.profile.follow_he.all()).order_by('-pub_date')
+    return render(request, 'news/news.html', {'form': form,
+                                              'posts': posts,
+                                              'count': count,
+                                              })
+
+def follow_i(request):
+    if request.user.is_authenticated:
+        profile = request.user.profile
+        follow_left = request.user.profile.follow_he.all()[0::2]
+        follow_right = request.user.profile.follow_he.all()[1::2]
+        return render(request, 'follows/subscriptions.html', {'profile': profile,
+                                                              'follow_left':follow_left,
+                                                              'follow_right':follow_right})
+    else:
+        return redirect('login')
+
+def exit(request):
+    if request.user.is_authenticated:
+        logout(request)
+    return redirect('login')

@@ -48,19 +48,46 @@
 	<body>
 		<div id="container">
 			<div id = "head">
-				<div class="btn"><p class="pb">Новости</p></div>
-				<div class="btn"><p	class="pb">Сообщения</p></div>
-				<div class="btn"><p	class="pb">Подписчики</p></div>
-				<div class="btn"><p	class="pb">Настройки</p></div>
+                <div class="b-popup" id="popup1">  <!-- Мое всплывающее окно-->
+                    <div id="profile_block_img">
+                        <a href="javascript:PopUpHide()"><p>X</p></a>
+                        <img src="{{profile.profile_img.url}}">
+                        <span>{{profile.name}} {{profile.surname}}</span>
+                    </div>
+                    <div id="profile_block_statistic">
+                        <div class="flex_row">
+                            <img src="https://image.freepik.com/free-icon/no-translate-detected_318-37158.jpg"/>
+                            <img src="https://image.freepik.com/free-icon/no-translate-detected_318-52486.jpg"/>
+                            <img src="https://image.freepik.com/free-icon/no-translate-detected_318-33583.jpg"/>
+                        </div>
+                        <div class="flex_row">
+                            <div>{{profile.stars}}</div>
+                            <div>12</div>
+                            <div>{{profile.follow_him.count}}</div>
+                        </div>
+                    </div>
+                    <div id="profile_block_bottom_panel">
+                        <div id="profile_block_bottom_panel_quard">
+                            <a id="exit" href="{% url 'exit' %}">Выйти</a>
+                            <div class="settings_symbol"></div>
+                        </div>
+                    </div>
+                </div>
+
+				<a class="btn" href="{% url 'all_news'%}"><p class="pb">Новости</p></a>
+				<a class="btn"><p	class="pb">Сообщения</p></a>
+				<a class="btn" href="{% url 'follow_me'%}"><p class="pb">Подписчики</p></a>
+				<a class="btn"><p	class="pb">Настройки</p> </a>
 				<p id="plus" class="head_signs"><a href="javascript:PopUpShow3()" style="	text-decoration: none; color:black;">+</a></p>
-				<img src="ManSign.png" id ="ManSign" class="head_signs"/>
-				
+				<a href="javascript:PopUpShow()">
+                    <img src="ManSign.png" id ="ManSign" class="head_signs"/>
+                </a>
 			</div>
 			
 			<div id = "main">
                 
                 <div class="content" id="new_challenge">
-                    <form action="{% url 'new_post'%}" method="POST" enctype="multipart/form-data">
+                    <form action="{% url 'all_news'%}" method="POST" enctype="multipart/form-data">
                         {% csrf_token %}
                         <div id="add_photo_block">{{form.image}}</div>
                         <div id="new_title">{{form.title}}</div>
@@ -77,147 +104,48 @@
                             <p class="content_text">{{post.text}}</p>
 
                             <div class="owner_of_news">
-                            <a class="show_profile" href="javascript:showprofile('post.id')">
-                                <img class="owner_of_news_img" src="https://pp.userapi.com/c834302/v834302361/1c126/tFHca4moQzE.jpg"/>
+                            <a class="show_profile" href="javascript:showprofile('{{post.id}}')">
+                                <img class="owner_of_news_img" src="{{post.author.profile_img.url}}"/>
                                 <p class="owner_of_news_p">{{post.author.name}} {{post.author.surname}}</p>
                             </a>
                             </div>
                             <div class="time_left">{{post.time}} days left</div>
                         </div> <!-- Блок новостей -->
 
-                        <div class="content profile_block" id="12345_profile"> <!-- Блок профиля в разделе новости -->
-                            <a class="exit_symbol" href="javascript:hideprofile('12345')">X</a> <!-- Блок профиля в разделе новости -->
-                            <img class="profile_img" src="https://pp.userapi.com/c834302/v834302361/1c126/tFHca4moQzE.jpg" />
-                            <h1 class="profile_h1">Владислав Инютин</h1 class="content_h1">
-                            <div id="profile_block_statistic">
+                        <div class="content profile_block" id="{{post.id}}_profile">
+                            <a class="exit_symbol" href="javascript:hideprofile('{{post.id}}')">X</a> <!-- Блок профиля в разделе новости -->
+                            <img class="profile_img" src="{{post.author.profile_img.url}}" />
+                            <h1 class="profile_h1">{{post.author.name}}</h1>
+                            <div class="profile_block_statistic">
                                 <div class="flex_row">
                                     <img src="https://image.freepik.com/free-icon/no-translate-detected_318-37158.jpg"/>
                                     <img src="https://image.freepik.com/free-icon/no-translate-detected_318-52486.jpg"/>
                                     <img src="https://image.freepik.com/free-icon/no-translate-detected_318-33583.jpg"/>
                                 </div>
                                 <div class="flex_row">
-                                    <div>5000000</div>
-                                    <div>10000</div>
-                                    <div>324</div>
+                                    <div>{{post.author.stars}}</div>
+                                    <div>{{count}}</div>
+                                    <div>{{post.author.follow_him.count}}</div>
                                 </div>
                             </div>
 
-                            <div class="news_profile_buttons">
-                                Написать сообщение
-                            </div>
-                            <div class="news_profile_buttons">
-                                Показать задачи
-                            </div>
+                            <a  class="news_profile_buttons">
+                                    Написать
+                            </a>
+                            <a  class="news_profile_buttons">
+                                    Показать профиль
+                            </a>
 
-                            <div class="news_profile_buttons">
-                                Подписаться
-                            </div>
+                            <a href="{% url 'new_follow' post.author.id %}" class="news_profile_buttons">
+                                    Подписаться
+                            </a>
                         </div>
                     {% endfor %}
-                <!-- Блок профиля в разделе новости -->
-                
-                <div class="content">
-					<img class="content_img" src="https://pp.userapi.com/c834304/v834304015/5020a/nl3OqGOFiOc.jpg" />
-					<h1 class="content_h1">Bla bla bla</h1 class="content_h1">
-					<p class="content_text">бляб ля лаявл аява выфа фыафывапфы ипдрывфарифдр</p>
-                    
-                    <div class="owner_of_news">
-                    <img class="owner_of_news_img" src="https://pp.userapi.com/c834302/v834302361/1c126/tFHca4moQzE.jpg"/>
-                    <p class="owner_of_news_p">Артём Тарасов</p>
-                    </div>
-                    <div class="time_left">30 days left</div>
-				</div>
-                
-                <div class="content">
-					<img class="content_img" src="https://pp.userapi.com/c834304/v834304015/5020a/nl3OqGOFiOc.jpg" />
-					<h1 class="content_h1">Bla bla bla</h1>
-					<p class="content_text">бляб ля лаявл аява выфа фыафывапфы ипдрывфарифдр</p>
-                    
-                    <div class="owner_of_news">
-                    <img class="owner_of_news_img" src="https://pp.userapi.com/c834302/v834302361/1c126/tFHca4moQzE.jpg"/>
-                    <p class="owner_of_news_p">Артём Тарасов</p>
-                    </div>
-                    <div class="time_left">30 days left</div>
-				</div>
-                
-                <div class="content">
-					<img class="content_img" src="https://pp.userapi.com/c834304/v834304015/5020a/nl3OqGOFiOc.jpg" />
-					<h1 class="content_h1">Bla bla bla</h1 class="content_h1">
-					<p class="content_text">бляб ля лаявл аява выфа фыафывапфы ипдрывфарифдр</p>
-                    
-                    <div class="owner_of_news">
-                    <img class="owner_of_news_img" src="https://pp.userapi.com/c834302/v834302361/1c126/tFHca4moQzE.jpg"/>
-                    <p class="owner_of_news_p">Артём Тарасов</p>
-                    </div>
-                    <div class="time_left">30 days left</div>
-				</div>
-                
-                <div class="content">
-					<img class="content_img" src="https://pp.userapi.com/c834304/v834304015/5020a/nl3OqGOFiOc.jpg" />
-					<h1 class="content_h1">Bla bla bla</h1 class="content_h1">
-					<p class="content_text">бляб ля лаявл аява выфа фыафывапфы ипдрывфарифдр</p>
-                    
-                    <div class="owner_of_news">
-                    <img class="owner_of_news_img" src="https://pp.userapi.com/c834302/v834302361/1c126/tFHca4moQzE.jpg"/>
-                    <p class="owner_of_news_p">Артём Тарасов</p>
-                    </div>
-                    <div class="time_left">30 days left</div>
-				</div>
-                
-                <div class="content">
-					<img class="content_img" src="https://pp.userapi.com/c834304/v834304015/5020a/nl3OqGOFiOc.jpg" />
-					<h1 class="content_h1">Bla bla bla</h1 class="content_h1">
-					<p class="content_text">бляб ля лаявл аява выфа фыафывапфы ипдрывфарифдр</p>
-                    
-                    <div class="owner_of_news">
-                    <img class="owner_of_news_img" src="https://pp.userapi.com/c834302/v834302361/1c126/tFHca4moQzE.jpg"/>
-                    <p class="owner_of_news_p">Артём Тарасов</p>
-                    </div>
-                    <div class="time_left">30 days left</div>
-				</div>
-                
-                <div class="content">
-					<img class="content_img" src="https://pp.userapi.com/c834304/v834304015/5020a/nl3OqGOFiOc.jpg" />
-					<h1 class="content_h1">Bla bla bla</h1 class="content_h1">
-					<p class="content_text">бляб ля лаявл аява выфа фыафывапфы ипдрывфарифдр</p>
-                    
-                    <div class="owner_of_news">
-                    <img class="owner_of_news_img" src="https://pp.userapi.com/c834302/v834302361/1c126/tFHca4moQzE.jpg"/>
-                    <p class="owner_of_news_p">Артём Тарасов</p>
-                    </div>
-                    <div class="time_left">30 days left</div>
-				</div>
-                
-                <div class="content">
-					<img class="content_img" src="https://pp.userapi.com/c834304/v834304015/5020a/nl3OqGOFiOc.jpg" />
-					<h1 class="content_h1">Bla bla bla</h1 class="content_h1">
-					<p class="content_text">бляб ля лаявл аява выфа фыафывапфы ипдрывфарифдр</p>
-                    
-                    <div class="owner_of_news">
-                    <img class="owner_of_news_img" src="https://pp.userapi.com/c834302/v834302361/1c126/tFHca4moQzE.jpg"/>
-                    <p class="owner_of_news_p">Артём Тарасов</p>
-                    </div>
-                    <div class="time_left">30 days left</div>
-				</div>
-                
-                <div class="content">
-					<img class="content_img" src="https://pp.userapi.com/c834304/v834304015/5020a/nl3OqGOFiOc.jpg" />
-					<h1 class="content_h1">Bla bla bla</h1 class="content_h1">
-					<p class="content_text">бляб ля лаявл аява выфа фыафывапфы ипдрывфарифдр</p>
-                    
-                    <div class="owner_of_news">
-                    <img class="owner_of_news_img" src="https://pp.userapi.com/c834302/v834302361/1c126/tFHca4moQzE.jpg"/>
-                    <p class="owner_of_news_p">Артём Тарасов</p>
-                    </div>
-                    <div class="time_left">30 days left</div>
-				</div>
-				
-
 			</div>
 			<div id = "navigation">
-				<div class="sections"><p>Мои подписки</p></div>
-				<div class="sections"><p>Популярное</p></div>
-				<div class="sections"><p>Новое</p></div>
+				<a class="sections" href="{% url 'myfollows' %}"><p>Мои подписки</p></a>
+				<a class="sections"><p>Популярное</p></a>
+				<a class="sections" href=""><p>Новое</p></a>
 				
 			</div>
 		</div>

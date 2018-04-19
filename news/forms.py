@@ -6,7 +6,7 @@ class Registration(UserCreationForm):
     name = forms.CharField(max_length=20, widget=forms.TextInput())
     surname = forms.CharField(max_length=20, widget=forms.TextInput())
     email = forms.EmailField(max_length=30, widget=forms.EmailInput())
-
+    image = forms.ImageField()
     class Meta:
         model = User
         fields = ('username', 'password1', 'password2',)
