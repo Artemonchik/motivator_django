@@ -13,5 +13,6 @@ urlpatterns = [
     path('new_follow/<int:id>/', views.new_follow, name='new_follow'),
     path('myfollows/', views.myfollows, name='myfollows'),
     path('follow_i/', views.follow_i, name='follow_i'),
-    path('exit/', views.exit, name='exit')
+    path('exit/', views.exit, name='exit'),
+    path('dialog/<int:id>/', views.messages, name='dialog')
 ]

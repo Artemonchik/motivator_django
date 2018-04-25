@@ -184,6 +184,8 @@ body{
 	text-align:justify;
 	margin:4px auto;
     font-family: -apple-system,BlinkMacSystemFont,Roboto,Helvetica Neue,sans-serif;
+    word-wrap: break-word;
+    overflow:hidden;
 }
 
 .content_h1{
@@ -224,6 +226,14 @@ body{
 	margin:15px auto;
 	border-radius:10px;
 	text-align:center;
+	transition: background-color 0.2s ease-out 0s;
+}
+.dialogs:hover{
+    background-color:#bdd3fd;
+}
+
+.dialogs:active{
+    background-color:9abeff;
 }
 
 .dialogs img{
@@ -262,7 +272,6 @@ body{
 	align-items:center;
 	justify-content:space-around;
 	border:0.5px solid #a7c6ff;
-	
 }
 
 #new_title input{
@@ -298,13 +307,20 @@ body{
 
 }
 
-#bottom_panel > p{
+#send_bottom{
 	background-color:#94fd94;
 	border-radius:3px;
 	font-weight:500;
 }
 
-#bottom_panel > p:hover{
+#bottom_panel > ul{
+	position:absolute;
+	bottom:-101%;
+	left:0px;
+	color:red;
+}
+
+#send_bottom:hover{
 	text-shadow:0 0 5px gray;
 	cursor: pointer;
 }
@@ -416,6 +432,12 @@ body{
     border-radius: 50%;
     margin-bottom: 18px;
 }
+#profile_block_img img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    margin-bottom: 18px;
+}
 
 #profile_block_statistic {
     height: 85px;
@@ -437,6 +459,10 @@ body{
 }
 
 #profile_block_statistic img {
+    width: 40px;
+    height: 40px;
+}
+.profile_block_statistic img {
     width: 40px;
     height: 40px;
 }
@@ -466,7 +492,7 @@ body{
 }
 
 .settings_symbol {
-    width: 36px;
+    width:  36fpx;
     height: 36px;
     background: url(http://s1.iconbird.com/ico/2013/9/452/w512h5121380477044settings.png) no-repeat;
     background-size: 36px 36px;
@@ -701,6 +727,13 @@ a {
     height:55px;
     font-size:13pt;
     color:#004409;
+    position:relative;
+}
+.form_fields_div_log > ul{
+    position:absolute;
+    right: -101%;
+    top:10px;
+    color: red;
 }
 #login_block_log form div[class="form_fields_div_log"] > input {
     width: 276px;

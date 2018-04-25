@@ -6,6 +6,8 @@ from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.models import User
 from django.views.decorators.http import require_POST
 from django.contrib.auth.decorators import login_required
+from django.shortcuts import get_object_or_404
+
 
 # Create your views here.
 def sign_up(request):
@@ -32,6 +34,7 @@ def sign_up(request):
         form = forms.Registration()
     return render(request, 'login/reg.html', {'form': form})
 
+
 @login_required()
 def all_news(request):
     if request.method == 'POST':
@@ -49,7 +52,7 @@ def all_news(request):
     return render(request, 'news/news.html', {'form': form,
                                               'posts': posts,
                                               'count': count,
-                                              'profile':request.user.profile,
+                                              'profile': request.user.profile,
                                               })
 
 
@@ -95,10 +98,11 @@ def follow_me(request):
         follow_left = request.user.profile.follow_him.all()[0::2]
         follow_right = request.user.profile.follow_him.all()[1::2]
         return render(request, 'follows/subscriptions.html', {'profile': profile,
-                                                              'follow_left':follow_left,
-                                                              'follow_right':follow_right})
+                                                              'follow_left': follow_left,
+                                                              'follow_right': follow_right})
     else:
         return redirect('login')
+
 
 def new_follow(request, id):
     if request.user.is_authenticated:
@@ -107,6 +111,7 @@ def new_follow(request, id):
         return HttpResponse('Всё отлично')
     else:
         redirect('login')
+
 
 @login_required()
 def myfollows(request):
@@ -126,18 +131,58 @@ def myfollows(request):
                                               'count': count,
                                               })
 
+
 def follow_i(request):
     if request.user.is_authenticated:
         profile = request.user.profile
         follow_left = request.user.profile.follow_he.all()[0::2]
         follow_right = request.user.profile.follow_he.all()[1::2]
         return render(request, 'follows/subscriptions.html', {'profile': profile,
-                                                              'follow_left':follow_left,
-                                                              'follow_right':follow_right})
+                                                              'follow_left': follow_left,
+                                                              'follow_right': follow_right})
     else:
         return redirect('login')
+
 
 def exit(request):
     if request.user.is_authenticated:
         logout(request)
     return redirect('login')
+
+
+@login_required
+def messages(request, id):
+    user_to = get_object_or_404(Profile, pk=id)
+    dialog = Dialog.objects.filter(users=user_to).filter(users=request.user.profile)
+    if request.user.profile == user_to:
+        return HttpResponse("you can't write yourself")
+    if dialog:
+        dialog = dialog[0]
+    else:
+        dialog = Dialog()
+        dialog.save()
+        dialog.users.add(user_to, request.user.profile)
+        dialog.save()
+
+    if request.method == 'POST':
+        form = forms.NewMessage(request.POST)
+        if form.is_valid():
+            message = Message.objects.create(text=form.cleaned_data.get('message'), sender=request.user.profile,
+                                             dialog=dialog)
+            message.save()
+    else:
+        form = forms.NewMessage()
+    dialogs = Dialog.objects.filter(users=request.user.profile)
+    users = []
+    for d in dialogs:
+        for u in d.users.all():
+            if u == request.user.profile:
+                continue
+            users.append(u)
+
+    return render(request, 'message/mes.html', {'dialog': dialog.message_set.order_by('-date'),
+                                                'profile': user_to,
+                                                'form': form,
+                                                'your_profile': request.user.profile,
+                                                'users': users,
+                                                })

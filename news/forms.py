@@ -21,3 +21,9 @@ class NewPost(forms.ModelForm):
     class Meta:
         model = Post
         fields = ('title', 'text', 'time', 'image')
+
+
+
+class NewMessage(forms.Form):
+    message = forms.CharField(max_length=255, widget=forms.TextInput(attrs={'placeholder':'Введите сообщение',
+                                                                            'autocomplete':'off'}))

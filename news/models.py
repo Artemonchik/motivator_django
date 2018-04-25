@@ -8,6 +8,7 @@ def user_directory_path(instance, filename):
     # file will be uploaded to MEDIA_ROOT/user_<id>/<filename>
     return '{0}/{1}'.format(instance.user.username, filename)
 
+
 def post_directory_path(instance, filename):
     # file will be uploaded to MEDIA_ROOT/user_<id>/<filename>
     return '{0}/{1}'.format(instance.author.user.username, filename)
@@ -25,7 +26,7 @@ class Profile(models.Model):
 
 class Post(models.Model):
     title = models.CharField(max_length=15)  # Заголовок
-    text = models.TextField(max_length=256)  # Текст
+    text = models.TextField(max_length=110)  # Текст
     pub_date = models.DateTimeField(default=timezone.now)  # Дата публикации
     author = models.ForeignKey(Profile, on_delete=models.CASCADE)  # Автор
     time = models.IntegerField(null=True, blank=False)  # Срок
@@ -33,3 +34,12 @@ class Post(models.Model):
 
     def __str__(self):
         return self.title
+
+class Dialog(models.Model):
+    users = models.ManyToManyField(Profile)
+
+class Message(models.Model):
+    text = models.CharField(max_length=255)
+    date = models.DateTimeField(default=timezone.now)
+    sender = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    dialog = models.ForeignKey(Dialog, on_delete=models.CASCADE)
