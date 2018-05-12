@@ -7,10 +7,11 @@ from django.contrib.auth.models import User
 from django.views.decorators.http import require_POST
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404
-
+from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 
 # Create your views here.
 def sign_up(request):
+
     if request.method == 'POST':
         form = forms.Registration(request.POST, request.FILES)
         if form.is_valid():
@@ -45,6 +46,8 @@ def all_news(request):
             post.author = request.user.profile
             post.save()
             return HttpResponse('Спасибо большоооое')
+        else:
+            return HttpResponse('Что - то пошло не так. Убедитесь в правильности формы')
     else:
         form = forms.NewPost()
         count = Post.objects.count()
@@ -53,6 +56,7 @@ def all_news(request):
                                               'posts': posts,
                                               'count': count,
                                               'profile': request.user.profile,
+                                              'likes':request.user.profile.like_set.all(),
                                               })
 
 
@@ -129,6 +133,7 @@ def myfollows(request):
     return render(request, 'news/news.html', {'form': form,
                                               'posts': posts,
                                               'count': count,
+                                              'likes': request.user.profile.like_set.all(),
                                               })
 
 
@@ -170,6 +175,7 @@ def messages(request, id):
             message = Message.objects.create(text=form.cleaned_data.get('message'), sender=request.user.profile,
                                              dialog=dialog)
             message.save()
+            form = forms.NewMessage()
     else:
         form = forms.NewMessage()
     dialogs = Dialog.objects.filter(users=request.user.profile)
@@ -186,3 +192,95 @@ def messages(request, id):
                                                 'your_profile': request.user.profile,
                                                 'users': users,
                                                 })
+@login_required
+def dialog(request):
+    dialogs = Dialog.objects.filter(users=request.user.profile)
+    users = []
+    for d in dialogs:
+        for u in d.users.all():
+            if u == request.user.profile:
+                continue
+            users.append(u)
+    return render(request, 'message/empty_dialog.html',{'users': users,
+                                                        'profile': request.user.profile,
+                                                        } )
+
+
+def start(request):
+    return redirect('all_news')
+
+@login_required
+def likepost(request, id):
+    user = request.user.profile
+    post = Post.objects.get(pk=id)
+    try:
+        post.like_set.get(user=user)
+    except ObjectDoesNotExist:
+        Like.objects.create(post=post, user=user)
+        post.likes += 1
+        post.save()
+    except MultipleObjectsReturned:
+        Like.objects.all().delete()
+    return HttpResponse("That's okey. we have %s likes %s" % (post.like_set.count(), post.likes))
+
+@login_required
+def unlikepost(request, id):
+    user = request.user.profile
+    post = Post.objects.get(pk=id)
+    try:
+        post.like_set.get(user=user)
+        Like.objects.get(post=post, user=user).delete()
+        post.likes -= 1
+        post.save()
+    except ObjectDoesNotExist:
+        pass
+    except MultipleObjectsReturned:
+        Like.objects.all().delete()
+        for i in Post.objects.all():
+            i.likes=0
+    return HttpResponse("That's okey. we have %s likes %s" % (post.like_set.count(), post.likes))
+
+@login_required
+def new_news(request):
+    if request.method == 'POST':
+        a = Post(author=request.user.profile)
+        form = forms.NewPost(request.POST, request.FILES)
+        if form.is_valid():
+            post = form.save(commit=False)
+            post.author = request.user.profile
+            post.save()
+            return HttpResponse('Спасибо большоооое')
+        else:
+            return HttpResponse('Что - то пошло не так. Убедитесь в правильности формы')
+    else:
+        form = forms.NewPost()
+        count = Post.objects.count()
+        posts = Post.objects.all().order_by('-pub_date')
+    return render(request, 'news/news.html', {'form': form,
+                                              'posts': posts,
+                                              'count': count,
+                                              'profile': request.user.profile,
+                                              'likes':request.user.profile.like_set.all(),
+                                              })
+
+def popular_news(request):
+    if request.method == 'POST':
+        a = Post(author=request.user.profile)
+        form = forms.NewPost(request.POST, request.FILES)
+        if form.is_valid():
+            post = form.save(commit=False)
+            post.author = request.user.profile
+            post.save()
+            return HttpResponse('Спасибо большоооое')
+        else:
+            return HttpResponse('Что - то пошло не так. Убедитесь в правильности формы')
+    else:
+        form = forms.NewPost()
+        count = Post.objects.count()
+        posts = Post.objects.all().order_by('-likes')
+    return render(request, 'news/news.html', {'form': form,
+                                              'posts': posts,
+                                              'count': count,
+                                              'profile': request.user.profile,
+                                              'likes':request.user.profile.like_set.all(),
+                                              })

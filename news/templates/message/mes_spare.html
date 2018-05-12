@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+	<head>
+		<meta charset="utf-8">
+		<link href="{% static 'style.css' %}" rel="stylesheet">
+		<title>Mes</title>
+		<script src="http://code.jquery.com/jquery-2.0.2.min.js"></script>
+		<script>
+
+                $(document).ready(function(){
+                    //Скрыть PopUp при загрузке страницы
+                    PopUpHide();
+                    PopUpHide2();
+                });
+                //Функция отображения PopUp
+                function PopUpShow(){
+                    $("#popup1").show();
+                }
+                //Функция скрытия PopUp
+                function PopUpHide(){
+                    $("#popup1").hide();
+                }
+        </script>
+        
+	</head>
+	<body>
+		<div id="container">
+			<div id = "head">
+				<div class="b-popup" id="popup1">  <!-- Мое всплывающее окно-->
+                    <div id="profile_block_img">
+                        <a href="javascript:PopUpHide()"><p>X</p></a>
+                        <img src="{{your_profile.profile_img.url}}">
+                        <span>{{your_profile.name}}</span>
+                    </div>
+                    <div id="profile_block_statistic">
+                        <div class="flex_row">
+                            <img src="https://image.freepik.com/free-icon/no-translate-detected_318-37158.jpg"/>
+                            <img src="https://image.freepik.com/free-icon/no-translate-detected_318-52486.jpg"/>
+                            <img src="https://image.freepik.com/free-icon/no-translate-detected_318-33583.jpg"/>
+                        </div>
+                        <div class="flex_row">
+                            <div>{{your_profile.stars}}</div>
+                            <div>12</div>
+                            <div>{{your_profile.follow_him.count}}</div>
+                        </div>
+                    </div>
+                    <div id="profile_block_bottom_panel">
+                        <div id="profile_block_bottom_panel_quard">
+                            <div id="exit">Выйти</div>
+                            <div class="settings_symbol"></div>
+                        </div>
+                    </div>
+                </div>
+				<a class="btn" href="{% url 'all_news'%}"><p class="pb">Новости</p></a>
+				<a class="btn" href="{% url 'empty_dialog'%}"><p class="pb" st>Сообщения</p></a>
+				<a class="btn" href="{% url 'follow_me'%}"><p class="pb">Подписчики</p></a>
+				<a class="btn"><p class="pb">Настройки</p> </a>
+				<p id="plus" class="head_signs"><a href="https://vk.com/im" style="	text-decoration: none; color:black;">+</a></p>
+				<a href="javascript:PopUpShow()">
+                    <img src="ManSign.png" id ="ManSign" class="head_signs"/>
+                </a>
+				
+			</div>
+			<div id="main">
+				<div id="dialog">
+					<div id="top_panel">
+						<p>{{profile.name}}</p><img src="{{profile.profile_img.url}}"/>
+					</div>
+					
+					<div id="dialog_window">
+						{% for message in dialog %}
+                            {% if message.sender.user.username == profile.user.username %}
+                                <div class="messages_of_opponent">{{message.text}}</div>
+						    {% endif %}
+                            {% if message.sender.user.username == your_profile.user.username %}
+                                <div class="your_messages">{{message.text}}</div>
+						    {% endif %}
+						{% endfor %}
+						<div style="padding:4px;"></div>
+					</div>
+					
+					<div id="bottom_panel">
+						<form action="{% url 'dialog' profile.id%}" method="POST">
+                            {% csrf_token %}
+                            {{form.message}}
+                            {{form.message.errors}}
+                            <input type="submit" value="Отпр." id="send_button" />
+                        </form>
+					</div>
+				</div>
+			</div>
+			<div id = "navigation">
+				{% for user in users%}
+					<a href="{% url 'dialog' user.id %}" class="dialogs"><img src="{{user.profile_img.url}}"/><p>{{user.name}} {{user.surname}}</p></a>
+				{% endfor %}
+			</div>
+		</div>
+	</body>
+</html>

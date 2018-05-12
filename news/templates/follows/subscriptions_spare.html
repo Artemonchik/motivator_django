@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+	<head>
+		<meta charset="utf-8">
+		<link href="{% static 'style.css'%}" rel="stylesheet">
+		<title>Subscriptions</title>
+        <script src="http://code.jquery.com/jquery-2.0.2.min.js"></script>
+        <script>
+
+                $(document).ready(function(){
+                    //Скрыть PopUp при загрузке страницы    
+                    PopUpHide();
+                    PopUpHide2();
+                });
+                //Функция отображения PopUp
+                function PopUpShow(){
+                    $("#popup1").show();
+                }
+                //Функция скрытия PopUp
+                function PopUpHide(){
+                    $("#popup1").hide();
+                }
+        </script>
+        <script>
+            $(function(){
+                $(window).scroll(function() {
+                    var top = $(document).scrollTop();
+                    if (top < 80) $("#navigation").css({top: '0', position: 'relative'});
+                    else $("#navigation").css({top: '3px', position: 'fixed'});
+                });
+            });
+        </script>
+	</head>
+	<body>
+		<div id="container">
+
+            <div id = "head">
+                <div class="b-popup" id="popup1">  <!-- Мое всплывающее окно-->
+                    <div id="profile_block_img">
+                        <a href="javascript:PopUpHide()"><p>X</p></a>
+                        <img src="{{profile.profile_img.url}}">
+                        <span>{{profile.name}}</span>
+                    </div>
+                    <div id="profile_block_statistic">
+                        <div class="flex_row">
+                            <img src="https://image.freepik.com/free-icon/no-translate-detected_318-37158.jpg"/>
+                            <img src="https://image.freepik.com/free-icon/no-translate-detected_318-52486.jpg"/>
+                            <img src="https://image.freepik.com/free-icon/no-translate-detected_318-33583.jpg"/>
+                        </div>
+                        <div class="flex_row">
+                            <div>{{profile.stars}}</div>
+                            <div>12</div>
+                            <div>{{profile.follow_him.count}}</div>
+                        </div>
+                    </div>
+                    <div id="profile_block_bottom_panel">
+                        <div id="profile_block_bottom_panel_quard">
+                            <div id="exit">Выйти</div>
+                            <div class="settings_symbol"></div>
+                        </div>
+                    </div>
+                </div>
+                
+				<a class="btn" href="{% url 'all_news'%}"><p class="pb">Новости</p></a>
+				<a class="btn" href="{% url 'empty_dialog'%}"><p class="pb" st>Сообщения</p></a>
+				<a class="btn" href="{% url 'follow_me'%}"><p class="pb">Подписчики</p></a>
+				<a class="btn"><p	class="pb">Настройки</p> </a>
+				<p id="plus" class="head_signs"><a href="javascript:PopUpShow2()" style="	text-decoration: none; color:black;">+</a></p>     
+                
+                <a href="javascript:PopUpShow()"><img src="ManSign.png" id ="ManSign" class="head_signs"/></a>
+				
+			</div>
+			<div id="followers_main">
+                <div id="followers_top_panel"><p> Мои подписки </p></div>
+
+                <div id="left_side" class="follower_sides">
+                    {% for follow in follow_left %}
+                        <div class="followers_div">
+                            <img class="followers_img" src="{{follow.profile_img.url}}"/>
+                            <p>{{follow.name}} {{follow.surname}}</p>
+                            <p style="margin:5px;"> x</p>
+                        </div>
+                    {% endfor %}
+                </div>
+                <div id="right_side" class="follower_sides">
+                    {% for follow in follow_right %}
+                        <div class="followers_div">
+                            <img class="followers_img" src="{{follow.profile_img.url}}"/>
+                            <p>{{follow.name}} {{follow.surname}}</p>
+                            <p style="margin:5px;"> x</p>
+                        </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+                {% else
+            </div>
+            <div id = "navigation">
+				    <a class="sections" href="{% url 'follow_me' %}"><p>Входящие</p></a>
+				    <a class="sections" href="{% url 'follow_i' %}"><p>Исходящие</p></a>
+            </div>
+		</div>
+	</body>
+</html>

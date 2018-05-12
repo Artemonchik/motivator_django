@@ -1,57 +1,42 @@
-<!DOCTYPE html>
-{% load static %}
-<html>
-	<head>
-		<meta charset="utf-8">
-		<link href="{% static 'style.css' %}" rel="stylesheet">
-		<title>Mes</title>
-        
-	</head>
-	<body>
-		<div id="container">
-			<div id = "head">
-				<a class="btn" href="{% url 'all_news'%}"><p class="pb">Новости</p></a>
-				<a class="btn"><p class="pb">Сообщения</p></a>
-				<a class="btn" href="{% url 'follow_me'%}"><p class="pb">Подписчики</p></a>
-				<a class="btn"><p class="pb">Настройки</p> </a>
-				<p id="plus" class="head_signs"><a href="https://vk.com/im" style="	text-decoration: none; color:black;">+</a></p>
-				<img src="ManSign.png" id ="ManSign" class="head_signs"/>
-				
-			</div>
-			<div id="main">
-				<div id="dialog">
-					<div id="top_panel">
-						<p>{{profile.name}}</p><img src="{{profile.profile_img.url}}"/>
-					</div>
-					
-					<div id="dialog_window">
-						{% for message in dialog %}
-                            {% if message.sender.user.username == profile.user.username %}
-                                <div class="messages_of_opponent">{{message.text}}</div>
-						    {% endif %}
-                            {% if message.sender.user.username == your_profile.user.username %}
-                                <div class="your_messages">{{message.text}}</div>
-						    {% endif %}
-						{% endfor %}
-						<div style="padding:4px;"></div>
-					</div>
-					
-					<div id="bottom_panel">
-						<form action="{% url 'dialog' profile.id%}" method="POST">
-                            {% csrf_token %}
-                            {{form.message}}
-                            {{form.message.errors}}
-                            <input type="submit" value="Submit" id="send_button" />
-                        </form>
-						<p>Отпр.</p>
-					</div>
-				</div>
-			</div>
-			<div id = "navigation">
-				{% for user in users%}
-					<a href="{% url 'dialog' user.id %}" class="dialogs"><img src="{{user.profile_img.url}}"/><p>{{user.name}} {{user.surname}}</p></a>
-				{% endfor %}
-			</div>
-		</div>
-	</body>
-</html>
+{% extends 'bases/base1.html' %}
+
+{%block title%}Messages{%endblock%}
+
+{% block main%}
+    <div id="main">
+        <div id="dialog">
+            <div id="top_panel">
+                <p>{{profile.name}}</p><img src="{{profile.profile_img.url}}"/>
+            </div>
+
+            <div id="dialog_window">
+                {% for message in dialog %}
+                    {% if message.sender.user.username == profile.user.username %}
+                        <div class="messages_of_opponent">{{message.text}}</div>
+                    {% endif %}
+                    {% if message.sender.user.username == your_profile.user.username %}
+                        <div class="your_messages">{{message.text}}</div>
+                    {% endif %}
+                {% endfor %}
+                <div style="padding:4px;"></div>
+            </div>
+
+            <div id="bottom_panel">
+                <form action="{% url 'dialog' profile.id%}" method="POST">
+                    {% csrf_token %}
+                    {{form.message}}
+                    {{form.message.errors}}
+                    <input type="submit" value="Отпр." id="send_button" />
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{%block navigation %}
+<div id = "navigation">
+    {% for user in users%}
+        <a href="{% url 'dialog' user.id %}" class="dialogs"><img src="{{user.profile_img.url}}"/><p>{{user.name}} {{user.surname}}</p></a>
+    {% endfor %}
+</div>
+{% endblock %}

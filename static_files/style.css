@@ -48,7 +48,9 @@ body{
 
 #ManSign{
 	float:right;
-	margin:6px auto;
+	margin:6px 12px;
+	width:20px;
+	height:20px;
 }
 
 #plus{
@@ -80,7 +82,7 @@ body{
 
 #followers_main{
 	width:640px;
-	min-height:100px;
+	min-height:400px;
 	float:right;
 	background-color:white;
 	margin:15px 10px;
@@ -141,7 +143,7 @@ body{
 }
 .content{
 	width:300px;
-	height:440px;
+	height:500px;
 	margin:15px 0px;
 	background-color:yellow;
 	border-radius:10px;
@@ -186,6 +188,7 @@ body{
     font-family: -apple-system,BlinkMacSystemFont,Roboto,Helvetica Neue,sans-serif;
     word-wrap: break-word;
     overflow:hidden;
+    font-size:11pt;
 }
 
 .content_h1{
@@ -307,10 +310,14 @@ body{
 
 }
 
-#send_bottom{
+#send_button{
 	background-color:#94fd94;
 	border-radius:3px;
 	font-weight:500;
+	height:30px;
+	border:0;
+	font-size:12pt;
+	margin:10px;
 }
 
 #bottom_panel > ul{
@@ -320,8 +327,8 @@ body{
 	color:red;
 }
 
-#send_bottom:hover{
-	text-shadow:0 0 5px gray;
+#send_button:hover{
+	box-shadow:0 0 5px gray;
 	cursor: pointer;
 }
 
@@ -492,7 +499,7 @@ body{
 }
 
 .settings_symbol {
-    width:  36fpx;
+    width:  36px;
     height: 36px;
     background: url(http://s1.iconbird.com/ico/2013/9/452/w512h5121380477044settings.png) no-repeat;
     background-size: 36px 36px;
@@ -570,16 +577,47 @@ body{
 }
 
 .time_left {
+    display:block;
     position: absolute;
     left: 0;
     bottom: 0;
-    background: red;
     margin: 10px;
     padding: 10px;
     font-size: 9pt;
     width: fit-content;
     border-radius: 8px;
     background-color: #bdfdc5;
+    transition: background-color 0.1s ease-out 0s;
+}
+
+.time_left:hover {
+    background-color: #a5fcff;
+}
+
+.time_left:active {
+    background-color: #89cbce;
+}
+
+.time_left_liked{
+    display: block;
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    margin: 10px;
+    padding: 10px;
+    font-size: 9pt;
+    width: fit-content;
+    border-radius: 8px;
+    background-color: #a5fcff;
+    transition: background-color 0.1s ease-out 0s;
+}
+
+.time_left_liked:hover {
+    background-color: #bdfdc5;
+}
+
+.time_left_liked:active {
+    background-color: #96d89e;
 }
 
 .follower_sides {
@@ -612,9 +650,7 @@ a {
     justify-content: flex-end;
 }
 
-#12345_profile {
-    
-}
+
 
 .profile_block {
     display: none;
@@ -743,4 +779,23 @@ a {
     font-size: 13pt;
     padding: 0 10px;
     border-width:0;
+}
+
+.empty_dialog{
+    position:absolute;
+     top:50%;
+     left:50%;
+     transform:translate(-50%,-50%);
+     width:300px;
+	 color:gray;
+	 text-align:center;
+	 font-size:12pt;
+}
+
+#id_message{
+    width:400px;
+    height:30px;
+    border-radius:1px;
+    border: 0 solid black;
+
 }
