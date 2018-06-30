@@ -39,7 +39,7 @@ def sign_up(request):
 @login_required()
 def all_news(request):
     if request.method == 'POST':
-        a = Post(author=request.user.profile)
+        #a = Post(author=request.user.profile)
         form = forms.NewPost(request.POST, request.FILES)
         if form.is_valid():
             post = form.save(commit=False)
@@ -117,7 +117,7 @@ def new_follow(request, id):
         redirect('login')
 
 
-@login_required()
+@login_required
 def myfollows(request):
     if request.method == 'POST':
         form = forms.NewPost(request.POST, request.FILES)
