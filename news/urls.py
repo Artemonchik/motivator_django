@@ -17,8 +17,9 @@ urlpatterns = [
     path('popular_news/', views.popular_news, name='popular_news'),
     path('follow_i/', views.follow_i, name='follow_i'),
     path('exit/', views.exit, name='exit'),
-    path('dialog/<int:id>/', views.messages, name='dialog'),
     path('dialog/', views.dialog, name='empty_dialog'),
+    path('dialog/<int:id>/', views.messages, name='dialog'),
     path('like/post/<int:id>/', views.likepost, name='like'),
     path('unlike/post/<int:id>/', views.unlikepost, name='unlike'),
+    path('check_messages/',views.checkMessage, name='check_message'),
 ]

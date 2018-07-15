@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from . import forms
 from .models import *
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseNotFound
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.models import User
 from django.views.decorators.http import require_POST
@@ -154,6 +154,10 @@ def exit(request):
         logout(request)
     return redirect('login')
 
+def getDialog(request, id):
+    user_to = get_object_or_404(Profile, pk=id)
+    dialog = Dialog.objects.filter(users=user_to).filter(users=request.user.profile)
+    return dialog[0]
 
 @login_required
 def messages(request, id):
@@ -185,12 +189,15 @@ def messages(request, id):
             if u == request.user.profile:
                 continue
             users.append(u)
-
+    print(request.content_type)
+    if(request.is_ajax()):
+        return HttpResponse("successful")
     return render(request, 'message/mes.html', {'dialog': dialog.message_set.order_by('-date'),
-                                                'profile': user_to,
+                                                'his_profile': user_to,
                                                 'form': form,
-                                                'your_profile': request.user.profile,
+                                                'profile': request.user.profile,
                                                 'users': users,
+                                                'count':dialog.message_set.count(),
                                                 })
 @login_required
 def dialog(request):
@@ -235,9 +242,7 @@ def unlikepost(request, id):
     except ObjectDoesNotExist:
         pass
     except MultipleObjectsReturned:
-        Like.objects.all().delete()
-        for i in Post.objects.all():
-            i.likes=0
+        pass
     return HttpResponse("That's okey. we have %s likes %s" % (post.like_set.count(), post.likes))
 
 @login_required
@@ -284,3 +289,23 @@ def popular_news(request):
                                               'profile': request.user.profile,
                                               'likes':request.user.profile.like_set.all(),
                                               })
+@login_required
+def checkMessage(request):
+    if(request.method == "GET"):
+        if(not request.GET.get("id")  or not request.GET.get("count")):
+            return HttpResponseNotFound('<h1>Page not found</h1>')
+        id = int(request.GET.get("id"))
+        count = int(request.GET.get("count"))
+        dialog = getDialog(request,id)
+        if(dialog.message_set.count() <= count):
+            return HttpResponse("No messages")
+        else:
+            str = ""
+            messages1 = dialog.message_set.all()[count::]
+            for i in messages1:
+                str = str + i.text + ","
+            str = str[:-1]
+
+            response = HttpResponse(str,content_type="text/plain")
+            return response
+

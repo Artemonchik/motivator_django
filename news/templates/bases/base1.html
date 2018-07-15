@@ -44,6 +44,8 @@
                     $("#" + id_).css({"display":"block"})
                 }
         </script>
+        {% block script %}
+        {% endblock %}
 	</head>
 	<body>
         {%block container%}
@@ -77,7 +79,7 @@
                 </div>
 
 				<a class="btn" href="{% url 'all_news'%}"><p class="pb">Новости</p></a>
-				<a class="btn" href="{% url 'empty_dialog'%}"><p class="pb" st>Сообщения</p></a>
+				<a class="btn" href="{% url 'empty_dialog'%}"><p class="pb">Сообщения</p></a>
 				<a class="btn" href="{% url 'follow_me'%}"><p class="pb">Подписчики</p></a>
 				<a class="btn"><p class="pb">Настройки</p> </a>
 				{% block plus %}

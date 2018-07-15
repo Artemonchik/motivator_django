@@ -1,20 +1,29 @@
 {% extends 'bases/base1.html' %}
 
 {%block title%}Messages{%endblock%}
-
+{% block script%}
+    {% load static%}
+    <script>
+        var messageUrl = "{% url 'dialog' his_profile.id%}";
+        var userId = {{ his_profile.id }};
+        var count = {{ count }};
+        var checkUrl = "{% url 'check_message' %}";
+    </script>
+    <script src="{%  static 'news/message/mes.js' %}" defer></script>
+{% endblock %}
 {% block main%}
     <div id="main">
         <div id="dialog">
             <div id="top_panel">
-                <p>{{profile.name}}</p><img src="{{profile.profile_img.url}}"/>
+                <p>{{his_profile.name}}</p><img src="{{his_profile.profile_img.url}}"/>
             </div>
 
             <div id="dialog_window">
                 {% for message in dialog %}
-                    {% if message.sender.user.username == profile.user.username %}
+                    {% if message.sender.user.username == his_profile.user.username %}
                         <div class="messages_of_opponent">{{message.text}}</div>
                     {% endif %}
-                    {% if message.sender.user.username == your_profile.user.username %}
+                    {% if message.sender.user.username == profile.user.username %}
                         <div class="your_messages">{{message.text}}</div>
                     {% endif %}
                 {% endfor %}
@@ -22,7 +31,7 @@
             </div>
 
             <div id="bottom_panel">
-                <form action="{% url 'dialog' profile.id%}" method="POST">
+                <form name="mes_form" action="{% url 'dialog' his_profile.id%}" method="POST">
                     {% csrf_token %}
                     {{form.message}}
                     {{form.message.errors}}

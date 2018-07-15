@@ -9,7 +9,6 @@ class Registration(UserCreationForm):
     surname = forms.CharField(max_length=20, widget=forms.TextInput())
     email = forms.EmailField(max_length=30, widget=forms.EmailInput())
     image = forms.ImageField()
-    text = forms.CharField()
 
     class Meta:
         model = User
@@ -29,4 +28,5 @@ class NewPost(forms.ModelForm):
 
 class NewMessage(forms.Form):
     message = forms.CharField(max_length=255, widget=forms.TextInput(attrs={'placeholder': 'Введите сообщение',
-                                                                            'autocomplete': 'off'}))
+                                                                            'autocomplete': 'off',
+                                                                            }))
