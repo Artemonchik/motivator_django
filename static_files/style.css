@@ -10,10 +10,13 @@ body{
 }
 #head{
 	margin:0 auto;
-	min-height: 54 px;
+	min-height: 54px;
 	background-color:#ffffff;
 	padding:5px;
     position: relative;
+	display:flex;
+	justify-content: flex-start;
+	align-items: center;
 }
 
 .btn {
@@ -37,6 +40,9 @@ body{
 	background-color:#bcd3fd;
 }
 
+.btn:nth-child(5) {
+	margin-right: auto;
+}
 
 .btn:active{
 	background-color:#9abeff;
@@ -47,18 +53,21 @@ body{
 }
 
 #ManSign{
-	float:right;
-	margin:6px 12px;
-	width:20px;
-	height:20px;
+	width: 25px;
+	height: 25px;
+	margin-left:3px;
+	margin-right: 10px;
+	display: block;
+	cursor: pointer;
 }
 
 #plus{
-	float:right;
 	font-size:45px;
 	font-weight:400;
 	margin:3px 8px;
 	color:black;
+    cursor: pointer;
+	margin-left: auto;
 }
 
 #plus:hover{
@@ -67,6 +76,7 @@ body{
 #plus:active{
 	text-shadow:rgba(154,190,255,1) 0 0 30px;
 }
+
 #plus:visited{
 	color:black;
 }
@@ -145,7 +155,6 @@ body{
 	width:300px;
 	height:500px;
 	margin:15px 0px;
-	background-color:yellow;
 	border-radius:10px;
 	background-color:white;
     position: relative;
@@ -165,6 +174,10 @@ body{
     background-color: #bdd3fd;
     margin:22px auto 0 auto;
     position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size:30pt;
 }
 
 .owner_of_news{
@@ -287,6 +300,7 @@ body{
     font-weight: 200;
     overflow-y: scroll;
     word-wrap: break-word;
+    border: 1px solid black;
 }
 
 #new_text textarea{
@@ -298,16 +312,34 @@ body{
     font-weight: 200;
     margin: 0 auto;
     resize: none;
+    border:1px solid black;
+}
+
+#submit{
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    display: flex;
+    width: 100px;
+    height: 30px;
+    background-color: #d6d6d6;
+    border-radius: 5px;
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+    padding: 2px;
 }
 #time{
     position:absolute;
-    left:5;
-    bottom:5;
+    bottom:5px;
+    left:5px;
 }
 #time input{
     width:100px;
     height:30px;
-
+    border-radius: 3px;
+    border-style: solid;
+    border-width: 1px;
 }
 
 #send_button{
@@ -318,6 +350,7 @@ body{
 	border:0;
 	font-size:12pt;
 	margin:10px;
+
 }
 
 #bottom_panel > ul{

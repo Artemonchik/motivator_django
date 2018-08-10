@@ -24,6 +24,10 @@ class NewPost(forms.ModelForm):
     class Meta:
         model = Post
         fields = ('title', 'text', 'time', 'image')
+        widgets = {
+            'image': forms.FileInput(attrs={"accept":".jpg, .jpeg, .png",
+                                            "style":"display:none",}),
+        }
 
 
 class NewMessage(forms.Form):

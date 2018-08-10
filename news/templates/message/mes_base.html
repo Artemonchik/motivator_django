@@ -1,0 +1,12 @@
+{% extends 'bases/base1.html' %}
+
+{%block title%}Messages{%endblock%}
+
+
+{%block navigation %}
+<div id = "navigation">
+    {% for user in users%}
+        <a href="{% url 'dialog' user.id %}" class="dialogs"><img src="{{user.profile_img.url}}"/><p>{{user.name}} {{user.surname}}</p></a>
+    {% endfor %}
+</div>
+{% endblock %}

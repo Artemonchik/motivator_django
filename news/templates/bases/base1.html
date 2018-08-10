@@ -3,7 +3,7 @@
 <html>
 	<head>
 		<meta charset="utf-8">
-		<link href="{% static 'style.css' %}" rel="stylesheet">
+		<link href="{% static 'style.css' %}?{% lorem 2 w random %}" rel="stylesheet">
 		<title>{%block title%}{%endblock%}</title>
         <script src="http://code.jquery.com/jquery-2.0.2.min.js"></script>
         <script>
@@ -44,6 +44,7 @@
                     $("#" + id_).css({"display":"block"})
                 }
         </script>
+        <script src="{% static 'base/base.js'%}?22" defer></script>
         {% block script %}
         {% endblock %}
 	</head>
@@ -84,9 +85,7 @@
 				<a class="btn"><p class="pb">Настройки</p> </a>
 				{% block plus %}
 				{% endblock %}
-                <a href="javascript:PopUpShow()">
-                    <img src="https://image.freepik.com/free-icon/no-translate-detected_318-33925.jpg" id ="ManSign" class="head_signs"/>
-                </a>
+                <img src="https://image.freepik.com/free-icon/no-translate-detected_318-33925.jpg" id ="ManSign" class="head_signs"/>
 			</div>
             {% endblock %}
 

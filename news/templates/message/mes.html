@@ -1,6 +1,4 @@
-{% extends 'bases/base1.html' %}
-
-{%block title%}Messages{%endblock%}
+{% extends 'message/mes_base.html' %}
 {% block script%}
     {% load static%}
     <script>
@@ -9,7 +7,7 @@
         var count = {{ count }};
         var checkUrl = "{% url 'check_message' %}";
     </script>
-    <script src="{%  static 'news/message/mes.js' %}" defer></script>
+    <script src="{%  static 'news/../../static/message/mes.js' %}" defer></script>
 {% endblock %}
 {% block main%}
     <div id="main">
@@ -40,12 +38,4 @@
             </div>
         </div>
     </div>
-{% endblock %}
-
-{%block navigation %}
-<div id = "navigation">
-    {% for user in users%}
-        <a href="{% url 'dialog' user.id %}" class="dialogs"><img src="{{user.profile_img.url}}"/><p>{{user.name}} {{user.surname}}</p></a>
-    {% endfor %}
-</div>
 {% endblock %}
