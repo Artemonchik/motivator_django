@@ -22,4 +22,5 @@ urlpatterns = [
     path('like/post/<int:id>/', views.likepost, name='like'),
     path('unlike/post/<int:id>/', views.unlikepost, name='unlike'),
     path('check_messages/',views.checkMessage, name='check_message'),
+    path('new_password', views.new_password, name='new_password')
 ]

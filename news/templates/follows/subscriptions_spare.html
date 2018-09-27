@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 {% load static %}
+
 <html>
 	<head>
 		<meta charset="utf-8">
@@ -66,9 +67,6 @@
 				<a class="btn" href="{% url 'empty_dialog'%}"><p class="pb" st>Сообщения</p></a>
 				<a class="btn" href="{% url 'follow_me'%}"><p class="pb">Подписчики</p></a>
 				<a class="btn"><p	class="pb">Настройки</p> </a>
-				<p id="plus" class="head_signs"><a href="javascript:PopUpShow2()" style="	text-decoration: none; color:black;">+</a></p>     
-                
-                <a href="javascript:PopUpShow()"><img src="ManSign.png" id ="ManSign" class="head_signs"/></a>
 				
 			</div>
 			<div id="followers_main">
@@ -92,8 +90,8 @@
                         </div>
                     {% endfor %}
                 </div>
-                {% endif %}
-                {% else
+
+
             </div>
             <div id = "navigation">
 				    <a class="sections" href="{% url 'follow_me' %}"><p>Входящие</p></a>

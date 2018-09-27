@@ -9,9 +9,9 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404
 from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 
+
 # Create your views here.
 def sign_up(request):
-
     if request.method == 'POST':
         form = forms.Registration(request.POST, request.FILES)
         if form.is_valid():
@@ -36,27 +36,33 @@ def sign_up(request):
     return render(request, 'login/reg.html', {'form': form})
 
 
-@login_required()
+@login_required
 def all_news(request):
     if request.method == 'POST':
-        #a = Post(author=request.user.profile)
         form = forms.NewPost(request.POST, request.FILES)
         if form.is_valid():
             post = form.save(commit=False)
             post.author = request.user.profile
             post.save()
-            return HttpResponse('Спасибо большоооое')
+            return redirect("all_news")
         else:
             return HttpResponse('Что - то пошло не так. Убедитесь в правильности формы')
     else:
         form = forms.NewPost()
         count = Post.objects.count()
         posts = Post.objects.all()[::-1]
+        likes = request.user.profile.like_set.all()
+        for post in posts:
+            post.liked = False
+            for like in likes:
+                if like in post.like_set.all():
+                    post.liked = True
+        change_password = forms.ChangePassword()
     return render(request, 'news/news.html', {'form': form,
                                               'posts': posts,
                                               'count': count,
                                               'profile': request.user.profile,
-                                              'likes':request.user.profile.like_set.all(),
+                                              'change_password': change_password
                                               })
 
 
@@ -73,10 +79,13 @@ def sign_in(request):
                     login(request, user)
                     return redirect('all_news')
                 else:
-                    return HttpResponse('This user does not exist')
+                    form = forms.SignIn()
+                    errors = ["This user does not exist"]
+                    return render(request, 'login/login.html', {'form': form,
+                                                                'errors': errors})
         else:
             form = forms.SignIn()
-        return render(request, 'login/login.html', {'form': form})
+        return render(request, 'login/login.html', {'form': form, })
 
 
 def new_post(request):
@@ -101,9 +110,11 @@ def follow_me(request):
         profile = request.user.profile
         follow_left = request.user.profile.follow_him.all()[0::2]
         follow_right = request.user.profile.follow_him.all()[1::2]
+        change_password = forms.ChangePassword()
         return render(request, 'follows/subscriptions.html', {'profile': profile,
                                                               'follow_left': follow_left,
-                                                              'follow_right': follow_right})
+                                                              'follow_right': follow_right,
+                                                              'change_password': change_password})
     else:
         return redirect('login')
 
@@ -130,10 +141,13 @@ def myfollows(request):
         form = forms.NewPost()
         count = Post.objects.count()
         posts = Post.objects.filter(author__in=request.user.profile.follow_he.all()).order_by('-pub_date')
+        change_password = forms.ChangePassword()
     return render(request, 'news/news.html', {'form': form,
                                               'posts': posts,
                                               'count': count,
                                               'likes': request.user.profile.like_set.all(),
+                                              'profile': request.user.profile,
+                                              'change_password': change_password
                                               })
 
 
@@ -142,9 +156,11 @@ def follow_i(request):
         profile = request.user.profile
         follow_left = request.user.profile.follow_he.all()[0::2]
         follow_right = request.user.profile.follow_he.all()[1::2]
+        change_password = forms.ChangePassword()
         return render(request, 'follows/subscriptions.html', {'profile': profile,
                                                               'follow_left': follow_left,
-                                                              'follow_right': follow_right})
+                                                              'follow_right': follow_right,
+                                                              'changePassword': change_password})
     else:
         return redirect('login')
 
@@ -154,10 +170,12 @@ def exit(request):
         logout(request)
     return redirect('login')
 
+
 def getDialog(request, id):
     user_to = get_object_or_404(Profile, pk=id)
     dialog = Dialog.objects.filter(users=user_to).filter(users=request.user.profile)
     return dialog[0]
+
 
 @login_required
 def messages(request, id):
@@ -190,15 +208,17 @@ def messages(request, id):
                 continue
             users.append(u)
     print(request.content_type)
-    if(request.is_ajax()):
+    if (request.is_ajax()):
         return HttpResponse("successful")
     return render(request, 'message/mes.html', {'dialog': dialog.message_set.order_by('-date'),
                                                 'his_profile': user_to,
                                                 'form': form,
                                                 'profile': request.user.profile,
                                                 'users': users,
-                                                'count':dialog.message_set.count(),
+                                                'count': dialog.message_set.count(),
                                                 })
+
+
 @login_required
 def dialog(request):
     dialogs = Dialog.objects.filter(users=request.user.profile)
@@ -208,13 +228,14 @@ def dialog(request):
             if u == request.user.profile:
                 continue
             users.append(u)
-    return render(request, 'message/empty_dialog.html',{'users': users,
-                                                        'profile': request.user.profile,
-                                                        } )
+    return render(request, 'message/empty_dialog.html', {'users': users,
+                                                         'profile': request.user.profile,
+                                                         })
 
 
 def start(request):
     return redirect('all_news')
+
 
 @login_required
 def likepost(request, id):
@@ -228,7 +249,10 @@ def likepost(request, id):
         post.save()
     except MultipleObjectsReturned:
         Like.objects.all().delete()
+    if request.is_ajax():
+        return HttpResponse()
     return HttpResponse("That's okey. we have %s likes %s" % (post.like_set.count(), post.likes))
+
 
 @login_required
 def unlikepost(request, id):
@@ -243,7 +267,10 @@ def unlikepost(request, id):
         pass
     except MultipleObjectsReturned:
         pass
+    if request.is_ajax():
+        return HttpResponse()
     return HttpResponse("That's okey. we have %s likes %s" % (post.like_set.count(), post.likes))
+
 
 @login_required
 def new_news(request):
@@ -261,13 +288,24 @@ def new_news(request):
         form = forms.NewPost()
         count = Post.objects.count()
         posts = Post.objects.all().order_by('-pub_date')
+        likes = request.user.profile.like_set.all()
+        for post in posts:
+            post.liked = False
+            for like in likes:
+                if like in post.like_set.all():
+                    post.liked = True
+        change_password = forms.ChangePassword()
+
     return render(request, 'news/news.html', {'form': form,
                                               'posts': posts,
                                               'count': count,
                                               'profile': request.user.profile,
-                                              'likes':request.user.profile.like_set.all(),
+                                              'likes': request.user.profile.like_set.all(),
+                                              'change_password': change_password,
                                               })
 
+
+@login_required
 def popular_news(request):
     if request.method == 'POST':
         a = Post(author=request.user.profile)
@@ -283,21 +321,30 @@ def popular_news(request):
         form = forms.NewPost()
         count = Post.objects.count()
         posts = Post.objects.all().order_by('-likes')
+        likes = request.user.profile.like_set.all()
+        for post in posts:
+            post.liked = False
+            for like in likes:
+                if like in post.like_set.all():
+                    post.liked = True
+        change_password = forms.ChangePassword()
     return render(request, 'news/news.html', {'form': form,
                                               'posts': posts,
                                               'count': count,
                                               'profile': request.user.profile,
-                                              'likes':request.user.profile.like_set.all(),
+                                              'likes': request.user.profile.like_set.all(),
                                               })
+
+
 @login_required
 def checkMessage(request):
-    if(request.method == "GET"):
-        if(not request.GET.get("id")  or not request.GET.get("count")):
+    if (request.method == "GET"):
+        if not request.GET.get("id") or not request.GET.get("count"):
             return HttpResponseNotFound('<h1>Page not found</h1>')
         id = int(request.GET.get("id"))
         count = int(request.GET.get("count"))
-        dialog = getDialog(request,id)
-        if(dialog.message_set.count() <= count):
+        dialog = getDialog(request, id)
+        if (dialog.message_set.count() <= count):
             return HttpResponse("No messages")
         else:
             str = ""
@@ -306,6 +353,24 @@ def checkMessage(request):
                 str = str + i.text + ","
             str = str[:-1]
 
-            response = HttpResponse(str,content_type="text/plain")
+            response = HttpResponse(str, content_type="text/plain")
             return response
 
+@login_required
+def new_password(request):
+    if request.method == "POST":
+        form = forms.ChangePassword(request.POST)
+        if form.is_valid():
+           user = authenticate(username=request.user.username, password=form.cleaned_data.get("passwordold"))
+           if(user != None):
+               if(form.cleaned_data.get("passwordnew1") == form.cleaned_data.get("passwordnew2")):
+                   user.set_password(form.cleaned_data.get("passwordnew1"))
+                   user.save()
+                   return HttpResponse("Новый пароль установлен")
+               else:
+                   return HttpResponse("Пароли не совпадают")
+           else:
+                return  HttpResponse("пароль введен не верно")
+        else:
+            return  HttpResponse("Форма не валидна")
+    return HttpResponse("Все окей")

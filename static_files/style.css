@@ -209,10 +209,8 @@ body{
 	width:230px;
 	text-align:left;
 	font-size:18pt;
-	font-weight:600;
-	font-style:italic;
-	margin:10px auto;
-	color:#3a6d40;
+	margin:15px auto;
+
 }
 
 .sections{
@@ -225,6 +223,13 @@ body{
 	margin:15px auto;
 	border-radius:10px;
 	text-align:center;
+	transition: background-color 0.3s ease-out;
+}
+.sections:hover{
+	background-color: #94FD9466;
+}
+.sections:active{
+	background-color: #96d89e66;
 }
 .sections p{
 	font-size:15pt;
@@ -249,7 +254,7 @@ body{
 }
 
 .dialogs:active{
-    background-color:9abeff;
+    background-color:#9abeff;
 }
 
 .dialogs img{
@@ -621,6 +626,7 @@ body{
     border-radius: 8px;
     background-color: #bdfdc5;
     transition: background-color 0.1s ease-out 0s;
+	cursor: pointer;
 }
 
 .time_left:hover {
@@ -643,6 +649,7 @@ body{
     border-radius: 8px;
     background-color: #a5fcff;
     transition: background-color 0.1s ease-out 0s;
+	cursor: pointer;
 }
 
 .time_left_liked:hover {
@@ -719,6 +726,9 @@ a {
     border-radius: 10px;
     font-size: 12pt;
 }
+.news_profile_buttons:hover{
+	box-shadow: darkgrey 0 0 3px 1px;
+}
 
 .exit_symbol {
     margin: 5px;
@@ -738,7 +748,6 @@ a {
 }
 
 #registration_button {
-    position: absolute;
     bottom: 0;
     left: 0;
     width: 100%;
@@ -787,7 +796,7 @@ a {
     top: 50%;
     left: 50%;
     width: 300px;
-    height: 230px;
+    min-height: 230px;
     transform: translate(-50%,-50%);
     border: 0;
 }
@@ -830,5 +839,69 @@ a {
     height:30px;
     border-radius:1px;
     border: 0 solid black;
+}
 
+.error{
+	color: red;
+
+}
+
+.popup1Settings {
+	background-color: #bdd3fd;
+	font-size:14pt;
+	text-align:center;
+	padding: 15px;
+	margin:15px auto 0 auto;
+	width:80%;
+	cursor: pointer;
+	border-radius: .25rem;
+}
+.popup1Settings:hover {
+	box-shadow: darkgrey 0 0 4px 1px;
+}
+#settings {
+	display: flex;
+	flex-direction: column;
+	justify-content:flex-start;
+	color:black;
+}
+
+.blocks{
+	position: relative;
+	height: 100%;
+	width: 100%;
+}
+
+.newpasswordfield{
+    background-color: white;
+	font-size:11pt;
+	text-align:center;
+	padding: 5px;
+	margin:15px auto 0 auto;
+	width:80%;
+	border-radius: .25rem;
+    border:1px solid black;
+}
+
+#changepasswordform {
+    display: flex;
+	flex-direction: column;
+	justify-content:flex-start;
+    align-items: center;
+	color:black;
+}
+
+#submitpassword {
+    position: absolute;
+    left: 10px;
+    bottom: 10px;
+    display: flex;
+    width: 100px;
+    height: 30px;
+    background-color: #d6d6d6;
+    border-radius: 5px;
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+    padding: 2px;
 }

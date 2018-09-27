@@ -34,3 +34,7 @@ class NewMessage(forms.Form):
     message = forms.CharField(max_length=255, widget=forms.TextInput(attrs={'placeholder': 'Введите сообщение',
                                                                             'autocomplete': 'off',
                                                                             }))
+class ChangePassword(forms.Form):
+    passwordold = forms.CharField(help_text="Enter your old password", widget=forms.PasswordInput(attrs={'class':'newpasswordfield',}))
+    passwordnew1 = forms.CharField(help_text="Enter your new password", widget=forms.PasswordInput(attrs={'class':'newpasswordfield'}))
+    passwordnew2 = forms.CharField(help_text="Repeat your new password", widget=forms.PasswordInput(attrs={'class':'newpasswordfield'}))

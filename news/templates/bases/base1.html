@@ -2,10 +2,13 @@
 {% load static %}
 <html>
 	<head>
-		<meta charset="utf-8">
-		<link href="{% static 'style.css' %}?{% lorem 2 w random %}" rel="stylesheet">
+        <link rel="stylesheet" type="text/css" href="static_files/style.css"/>
+        <link rel="stylesheet" type="text/css" href="static_files/style.css"/>
+        <link rel="stylesheet" type="text/css" href="static_files/style.css"/>
+        <meta charset="utf-8">
+		<link href="{% static 'style.css' %}?{% lorem 1 w random %}" rel="stylesheet">
 		<title>{%block title%}{%endblock%}</title>
-        <script src="http://code.jquery.com/jquery-2.0.2.min.js"></script>
+        <script src="http://code.jquery.com/jquery-3.3.1.js"></script>
         <script>
 
                 $(document).ready(function(){
@@ -28,9 +31,6 @@
                 function PopUpHide2(){
                     $("#popup2").hide();
                 }
-               function PopUpShow3(){
-                    $("#new_challenge").css({display:'block'});
-                }
                 //Функция скрытия PopUp
                 function PopUpHide3(){
                     $("#new_challenge").hide();
@@ -44,7 +44,7 @@
                     $("#" + id_).css({"display":"block"})
                 }
         </script>
-        <script src="{% static 'base/base.js'%}?22" defer></script>
+        <script src="{% static 'base/base.js'%}?{% lorem 1 w random %}" defer></script>
         {% block script %}
         {% endblock %}
 	</head>
@@ -53,40 +53,54 @@
 		<div id="container">
             {% block head %}
             <div id = "head">
-                <div class="b-popup" id="popup1">  <!-- Мое всплывающее окно-->
-                    <div id="profile_block_img">
-                        <a href="javascript:PopUpHide()"><p>X</p></a>
-                        <img src="{{profile.profile_img.url}}">
-                        <span>{{profile.name}} {{profile.surname}}</span>
+                <div class="b-popup" id="popup1">
+                    <div id="mains" class="blocks">
+                        <div id="profile_block_img">
+                            <img src="{{profile.profile_img.url}}">
+                            <span>{{profile.name}} {{profile.surname}}</span>
+                        </div>
+                        <div id="profile_block_statistic">
+                            <div class="flex_row">
+                                <img src="https://image.freepik.com/free-icon/no-translate-detected_318-37158.jpg"/>
+                                <img src="https://image.freepik.com/free-icon/no-translate-detected_318-52486.jpg"/>
+                                <img src="https://image.freepik.com/free-icon/no-translate-detected_318-33583.jpg"/>
+                            </div>
+                            <div class="flex_row">
+                                <div>{{profile.stars}}</div>
+                                <div>12</div>
+                                <div>{{profile.follow_him.count}}</div>
+                            </div>
+                        </div>
                     </div>
-                    <div id="profile_block_statistic">
-                        <div class="flex_row">
-                            <img src="https://image.freepik.com/free-icon/no-translate-detected_318-37158.jpg"/>
-                            <img src="https://image.freepik.com/free-icon/no-translate-detected_318-52486.jpg"/>
-                            <img src="https://image.freepik.com/free-icon/no-translate-detected_318-33583.jpg"/>
-                        </div>
-                        <div class="flex_row">
-                            <div>{{profile.stars}}</div>
-                            <div>12</div>
-                            <div>{{profile.follow_him.count}}</div>
-                        </div>
+                    <div id="settings" class="blocks">
+                        <div id="changepasswordbutton" class="popup1Settings " style="">Поменять пароль</div>
+                        <div id="changeNameAndSurname" class="popup1Settings" style=""> Поменять имя и фамилию</div>
+                        <div id="changeFoto" class="popup1Settings" style="">Поменять фото</div>
                     </div>
-                    <div id="profile_block_bottom_panel">
-                        <div id="profile_block_bottom_panel_quard">
-                            <a id="exit" href="{% url 'exit' %}">Выйти</a>
-                            <a class="settings_symbol"></a>
-                        </div>
+                    <div id="changepasswordblock" class="blocks">
+                        <form method="post" id="changepasswordform" autocomplete="off" action="{% url 'new_password' %}" enctype="application/x-www-form-urlencoded">
+                            {% csrf_token %}
+                            {% for password_field in change_password %}
+                                {{ password_field }}
+                            {% endfor %}
+                            <label id="submitpassword"><input type="submit" name="Отправить." style="display: none">Отправить</label>
+                        </form>
+                    </div>
+                    <div id="profile_block_bottom_panel_quard">
+                        <a id="exit" href="{% url 'exit' %}">Выйти</a>
+                        <a class="settings_symbol"></a>
                     </div>
                 </div>
 
 				<a class="btn" href="{% url 'all_news'%}"><p class="pb">Новости</p></a>
 				<a class="btn" href="{% url 'empty_dialog'%}"><p class="pb">Сообщения</p></a>
 				<a class="btn" href="{% url 'follow_me'%}"><p class="pb">Подписчики</p></a>
-				<a class="btn"><p class="pb">Настройки</p> </a>
 				{% block plus %}
 				{% endblock %}
-                <img src="https://image.freepik.com/free-icon/no-translate-detected_318-33925.jpg" id ="ManSign" class="head_signs"/>
-			</div>
+                {% block mansign %}
+                    <img src="https://image.freepik.com/free-icon/no-translate-detected_318-33925.jpg" id="ManSign" class="head_signs"/>
+                {% endblock %}
+            </div>
             {% endblock %}
 
             {% block main%}
